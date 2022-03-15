@@ -39,22 +39,22 @@ describe("#Routes - test suite for API response", () => {
     params.request.url = '/home'
     const mockFileStream = TestUtil.generateReadableStream(['data'])
 
-    jest.spyOn(
+    const getFileStream = jest.spyOn(
       Controller.prototype,
       Controller.prototype.getFileStream.name,
     ).mockResolvedValue({
       stream: mockFileStream,
     })
 
-    jest.spyOn(
+    const pipe = jest.spyOn(
       mockFileStream,
       "pipe"
     ).mockReturnValue()
 
     await handler(...params.values())
 
-    expect(Controller.prototype.getFileStream).toBeCalledWith(pages.homeHTML)
-    expect(mockFileStream.pipe).toHaveBeenCalledWith(params.response)
+    expect(getFileStream).toBeCalledWith(pages.homeHTML)
+    expect(pipe).toHaveBeenCalledWith(params.response)
   })
 
   test(`GET /controller - should answer with ${pages.controllerHTML} file stream`, async () => {
@@ -63,22 +63,22 @@ describe("#Routes - test suite for API response", () => {
     params.request.url = '/controller'
     const mockFileStream = TestUtil.generateReadableStream(['data'])
 
-    jest.spyOn(
+    const getFileStream = jest.spyOn(
       Controller.prototype,
       Controller.prototype.getFileStream.name,
     ).mockResolvedValue({
       stream: mockFileStream,
     })
 
-    jest.spyOn(
+    const pipe = jest.spyOn(
       mockFileStream,
       "pipe"
     ).mockReturnValue()
 
     await handler(...params.values())
 
-    expect(Controller.prototype.getFileStream).toBeCalledWith(pages.controllerHTML)
-    expect(mockFileStream.pipe).toHaveBeenCalledWith(params.response)
+    expect(getFileStream).toBeCalledWith(pages.controllerHTML)
+    expect(pipe).toHaveBeenCalledWith(params.response)
   })
 
   test(`GET /index.html - given an file with configured extension it should answer with file stream and correct content-type`, async () => {
@@ -89,7 +89,7 @@ describe("#Routes - test suite for API response", () => {
     params.request.url = expectedUrl
     const mockFileStream = TestUtil.generateReadableStream(['data'])
 
-    jest.spyOn(
+    const getFileStream = jest.spyOn(
       Controller.prototype,
       Controller.prototype.getFileStream.name,
     ).mockResolvedValue({
@@ -97,7 +97,7 @@ describe("#Routes - test suite for API response", () => {
       type: expectedType
     })
 
-    jest.spyOn(
+    const pipe = jest.spyOn(
       mockFileStream,
       "pipe"
     ).mockReturnValue()
@@ -110,8 +110,8 @@ describe("#Routes - test suite for API response", () => {
         'Content-Type': CONTENT_TYPE[expectedType]
       }
     )
-    expect(Controller.prototype.getFileStream).toBeCalledWith(expectedUrl)
-    expect(mockFileStream.pipe).toHaveBeenCalledWith(params.response)
+    expect(getFileStream).toBeCalledWith(expectedUrl)
+    expect(pipe).toHaveBeenCalledWith(params.response)
   })
 
   test(`GET /file.ext - given an file without configured extension it should answer without Content-Type`, async () => {
@@ -122,7 +122,7 @@ describe("#Routes - test suite for API response", () => {
     params.request.url = expectedUrl
     const mockFileStream = TestUtil.generateReadableStream(['data'])
 
-    jest.spyOn(
+    const getFileStream = jest.spyOn(
       Controller.prototype,
       Controller.prototype.getFileStream.name,
     ).mockResolvedValue({
@@ -130,15 +130,15 @@ describe("#Routes - test suite for API response", () => {
       type: expectedType
     })
 
-    jest.spyOn(
+    const pipe = jest.spyOn(
       mockFileStream,
       "pipe"
     ).mockReturnValue()
 
     await handler(...params.values())
 
-    expect(Controller.prototype.getFileStream).toBeCalledWith(expectedUrl)
-    expect(mockFileStream.pipe).toHaveBeenCalledWith(params.response)
+    expect(getFileStream).toBeCalledWith(expectedUrl)
+    expect(pipe).toHaveBeenCalledWith(params.response)
     expect(params.response.writeHead).not.toHaveBeenCalled()
   })
 
@@ -169,6 +169,7 @@ describe("#Routes - test suite for API response", () => {
       expect(params.response.writeHead).toBeCalledWith(404)
       expect(params.response.end).toHaveBeenCalled()
     })
+
     test('given and error it should answer with 500', async () => {
       const params = TestUtil.defaultHandleParams()
       params.request.method = 'GET'

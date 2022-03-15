@@ -22,14 +22,14 @@ describe("#Service - test suite for API service", () => {
     const file = '/index.html'
     const mockFileStream = TestUtil.generateReadableStream(['data'])
 
-    jest
+    const createReadStream = jest
       .spyOn(fs, fs.createReadStream.name)
       .mockResolvedValue(mockFileStream)
 
     const service = new Service()
     const serviceReturn = service.createFileStream(file)
 
-    expect(fs.createReadStream).toBeCalledWith(file)
+    expect(createReadStream).toBeCalledWith(file)
     expect(serviceReturn).resolves.toStrictEqual(mockFileStream)
   })
   test('getFileInfo - should return file info', async () => {
