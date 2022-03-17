@@ -1,6 +1,7 @@
-import config from "./config.js"
-import server from "./server.js"
-import { logger } from "./util.js"
+import config from "./configs/index.js";
+import server from "./http/index.js";
+import { logger } from "./utils/index.js";
 
-server.listen(config.port)
-  .on('listening', () => logger.info(`server running at ${config.port}`))
+server
+  .listen(config.port)
+  .on("listening", () => logger.info(`server running at ${config.port}`));
